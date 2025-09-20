@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fabric Yardage Calculator | Custom Curtains</title>
+<meta name="description" content="Free fabric yardage calculator for custom curtains. Estimate yards/meters based on opening width, finished drop, fullness and fabric width.">
+<style>
+  body{font-family:Arial,ui-sans-serif; margin:0; background:#f6f8fb; color:#222}
+  .wrap{max-width:900px; margin:0 auto; padding:20px}
+  .card{background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:18px; margin:16px 0}
+  h1{margin:8px 0 6px; font-size:22px} h2{margin:0 0 10px; font-size:18px}
+  label{display:block; margin-top:10px} input,select{width:100%; padding:8px 10px; margin-top:6px; border:1px solid #ccc; border-radius:6px}
+  .row{display:grid; grid-template-columns:repeat(12,1fr); gap:12px}
+  .col-4{grid-column:span 4} .col-6{grid-column:span 6} .col-12{grid-column:span 12}
+  .btn{display:inline-block; padding:10px 16px; border-radius:6px; text-decoration:none; cursor:pointer}
+  .primary{background:#0b73f5; color:#fff; border:0} .secondary{background:#eee; color:#222; border:0}
+  footer{color:#777; text-align:center; padding:24px 0}
+  a{color:#0b73f5; text-decoration:none} a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Fabric Yardage Calculator</h1>
+    <p>Use this free calculator to estimate fabric needed for <strong>custom curtains</strong>.
+       Enter opening width, finished drop, fullness and fabric width. Then visit
+       <a href="https://luxdrape.com/" target="_blank" rel="noopener">LuxDrape</a> to order.</p>
+
+    <div class="card">
+      <h2>1) Inputs (inches)</h2>
+      <div class="row">
+        <div class="col-4">
+          <label for="openWidth">Opening width</label>
+          <input id="openWidth" type="number" min="1" step="0.1" placeholder="e.g. 72">
+        </div>
+        <div class="col-4">
+          <label for="finishedDrop">Finished drop (rod to bottom)</label>
+          <input id="finishedDrop" type="number" min="1" step="0.1" placeholder="e.g. 96">
+        </div>
+        <div class="col-4">
+          <label for="fullness">Fullness ×</label>
+          <select id="fullness">
+            <option value="1.8">1.8× (sleek)</option>
+            <option value="2.0">2.0×</option>
+            <option value="2.2" selected>2.2× (balanced)</option>
+            <option value="2.5">2.5× (lush)</option>
+          </select>
+        </div>
+
+        <div class="col-4">
+          <label for="fabricWidth">Fabric width</label>
+          <select id="fabricWidth">
+            <option value="54" selected>54 in (standard)</option>
+            <option value="118">118 in (wide width)</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label for="topHem">Top allowance (header/heading)</label>
+          <input id="topHem" type="number" min="0" step="0.1" placeholder="e.g. 4">
+        </div>
+        <div class="col-4">
+          <label for="bottomHem">Bottom hem allowance</label>
+          <input id="bottomHem" type="number" min="0" step="0.1" placeholder="e.g. 6">
+        </div>
+
+        <div class="col-4">
+          <label for="repeat">Pattern repeat allowance (per drop)</label>
+          <input id="repeat" type="number" min="0" step="0.1" placeholder="e.g. 0 or 12">
+        </div>
+      </div>
+
+      <div style="margin-top:12px">
+        <button class="btn primary" id="calcBtn">Calculate</button>
+        <button class="btn secondary" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2) Results</h2>
+      <div id="results"><p>Fill the form and click <strong>Calculate</strong>.</p></div>
+      <p style="margin-top:10px">
+        <a class="btn primary" href="https://luxdrape.com/" target="_blank" rel="noopener">Order at LuxDrape ↗</a>
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>3) Helpful links</h2>
+      <ul>
+        <li><a href="https://luxdrape.com/" target="_blank" rel="noopener">Custom Curtains — LuxDrape</a></li>
+        <li><a href="https://luxdrape.com/collections/linen" target="_blank" rel="noopener">Linen Custom Curtains</a></li>
+        <li><a href="https://luxdrape.com/collections/velvet" target="_blank" rel="noopener">Velvet Custom Curtains</a></li>
+      </ul>
+    </div>
+
+    <footer>© <span id="y"></span> LuxDrape • Clean backlinks to <a href="https://luxdrape.com/" target="_blank" rel="noopener">LuxDrape</a>.</footer>
+  </div>
+
+<script>
+  function round(n,d){const p=Math.pow(10,d);return Math.round((n+Number.EPSILON)*p)/p;}
+
+  function calc(){
+    const W  = parseFloat(document.getElementById('openWidth').value);
+    const D  = parseFloat(document.getElementById('finishedDrop').value);
+    const F  = parseFloat(document.getElementById('fullness').value);
+    const FW = parseFloat(document.getElementById('fabricWidth').value);
+    const TH = parseFloat(document.getElementById('topHem').value || 0);
+    const BH = parseFloat(document.getElementById('bottomHem').value || 0);
+    const RP = parseFloat(document.getElementById('repeat').value || 0);
+
+    if(!Number.isFinite(W)||W<=0||!Number.isFinite(D)||D<=0||!Number.isFinite(F)||F<=0||!Number.isFinite(FW)||FW<=0){
+      document.getElementById('results').innerHTML = "<p>Please enter valid positive numbers.</p>";
+      return;
+    }
+
+    const totalFinishedWidth = W * F;                 // 总成品宽
+    const widthsNeeded = Math.max(1, Math.ceil(totalFinishedWidth / FW));  // 需要几幅布
+    const dropLen = D + TH + BH + RP;                 // 每幅长度（含缝头与对花）
+
+    // 简化估算：总码数 / 米数
+    const yards  = widthsNeeded * (dropLen / 36);
+    const meters = widthsNeeded * (dropLen * 2.54 / 100);
+
+    document.getElementById('results').innerHTML = `
+      <p><strong>Total finished width needed:</strong> ${round(totalFinishedWidth,1)} in</p>
+      <p><strong>Fabric widths required:</strong> ${widthsNeeded}</p>
+      <p><strong>Per-width drop length (incl. hems/repeat):</strong> ${round(dropLen,1)} in</p>
+      <p><strong>Estimated fabric:</strong> ${round(yards,2)} yards  •  ${round(meters,2)} meters</p>
+      <small>Note: This is a practical estimate for custom curtains. Always double-check with your workroom.</small>
+    `;
+  }
+
+  document.getElementById('calcBtn').addEventListener('click', calc);
+  document.getElementById('resetBtn').addEventListener('click', ()=>location.reload());
+  document.getElementById('y').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
