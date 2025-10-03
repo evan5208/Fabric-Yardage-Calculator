@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Fabric Yardage Calculator | LuxDrape</title>
-  <meta name="description" content="Free fabric yardage calculator for custom curtains. Estimate fabric requirements by width, drop, fabric width, and allowances before ordering at LuxDrape." />
+  <title>Fabric Yardage Calculator | WorldHomeExpo</title>
+  <meta name="description" content="Free fabric yardage calculator for custom curtains. Estimate fabric needs by width, drop, fabric width, and allowances before ordering at WorldHomeExpo." />
   <meta name="robots" content="index,follow" />
   <style>
     :root{
       --bg:#f6f8fb; --card:#fff; --ink:#222; --muted:#555; --line:#e5e7eb; --brand:#0b73f5;
     }
     *{box-sizing:border-box}
-    body{margin:0; font-family:Arial,ui-sans-serif; background:var(--bg); color:var(--ink)}
+    body{margin:0; font-family:Arial,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,"Apple Color Emoji","Segoe UI Emoji"; background:var(--bg); color:var(--ink)}
     a{color:var(--brand); text-decoration:none}
     a:hover{text-decoration:underline}
     header{background:var(--card); border-bottom:1px solid var(--line)}
@@ -21,7 +21,8 @@
     .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin:18px 0}
     label{display:block; margin-top:8px; font-size:14px}
     input,select{width:100%; padding:10px 12px; border:1px solid #ccc; border-radius:8px}
-    .btn{display:inline-block; padding:10px 16px; border-radius:8px; background:var(--brand); color:#fff; text-decoration:none; margin-top:12px}
+    .btn{display:inline-block; padding:10px 16px; border-radius:8px; background:var(--brand); color:#fff; text-decoration:none; margin-top:12px; border:none; cursor:pointer}
+    .btn-muted{background:#777}
     .results{margin-top:14px; font-size:15px}
     footer{color:#777; text-align:center; padding:26px 0 40px}
   </style>
@@ -31,24 +32,26 @@
     <div class="wrap">
       <h1>Fabric Yardage Calculator</h1>
       <p class="lead">
-        Estimate fabric requirements for your <a href="https://luxdrape.com/" target="_blank" rel="noopener">Custom Curtains</a> quickly and accurately.
+        Estimate fabric requirements for your
+        <a href="https://worldhomeexpo.com/" target="_blank" rel="noopener">Custom Curtains</a>
+        quickly and accurately.
       </p>
     </div>
   </header>
 
   <main class="wrap">
     <!-- Inputs -->
-    <section class="card">
-      <h2>1) Inputs (inches)</h2>
-      <form id="form">
+    <section class="card" aria-labelledby="inputsHeading">
+      <h2 id="inputsHeading">1) Inputs (inches)</h2>
+      <form id="form" novalidate>
         <label for="width">Opening width</label>
-        <input id="width" type="number" placeholder="e.g. 72" required />
+        <input id="width" type="number" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 72" required />
 
         <label for="drop">Finished drop (rod to bottom)</label>
-        <input id="drop" type="number" placeholder="e.g. 96" required />
+        <input id="drop" type="number" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 96" required />
 
         <label for="fullness">Fullness ×</label>
-        <select id="fullness">
+        <select id="fullness" aria-label="Fullness multiplier">
           <option value="1.8">1.8× (sleek)</option>
           <option value="2.0">2.0×</option>
           <option value="2.2" selected>2.2× (balanced)</option>
@@ -56,51 +59,52 @@
         </select>
 
         <label for="fabricWidth">Fabric width</label>
-        <select id="fabricWidth">
+        <select id="fabricWidth" aria-label="Fabric width">
           <option value="54">54 in (standard)</option>
           <option value="110">110 in (wide)</option>
         </select>
 
         <label for="topAllowance">Top allowance (header/heading)</label>
-        <input id="topAllowance" type="number" placeholder="e.g. 4" />
+        <input id="topAllowance" type="number" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 4" />
 
         <label for="bottomAllowance">Bottom hem allowance</label>
-        <input id="bottomAllowance" type="number" placeholder="e.g. 6" />
+        <input id="bottomAllowance" type="number" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 6" />
 
         <label for="patternRepeat">Pattern repeat allowance (per drop)</label>
-        <input id="patternRepeat" type="number" placeholder="e.g. 0 or 12" />
+        <input id="patternRepeat" type="number" inputmode="decimal" min="0" step="0.1" placeholder="e.g. 0 or 12" />
 
-        <button type="button" class="btn" onclick="calculate()">Calculate</button>
-        <button type="reset" class="btn" style="background:#777">Reset</button>
+        <button type="button" class="btn" id="calcBtn" aria-label="Calculate">Calculate</button>
+        <button type="reset" class="btn btn-muted" aria-label="Reset form">Reset</button>
       </form>
     </section>
 
     <!-- Results -->
-    <section class="card">
-      <h2>2) Results</h2>
+    <section class="card" aria-labelledby="resultsHeading">
+      <h2 id="resultsHeading">2) Results</h2>
       <div id="results" class="results">
         <p>Fill the form and click <strong>Calculate</strong>.</p>
       </div>
-      <a href="https://luxdrape.com/" target="_blank" rel="noopener" class="btn">Order at LuxDrape ↗</a>
+      <a href="https://worldhomeexpo.com/" target="_blank" rel="noopener" class="btn" role="button" aria-label="Order at WorldHomeExpo">Order at WorldHomeExpo ↗</a>
     </section>
 
     <!-- Helpful links -->
-    <section class="card">
-      <h2>3) Helpful Links</h2>
+    <section class="card" aria-labelledby="linksHeading">
+      <h2 id="linksHeading">3) Helpful Links</h2>
       <ul>
-        <li><a href="https://luxdrape.com/" target="_blank" rel="noopener">Custom Curtains — LuxDrape</a></li>
-        <li><a href="https://luxdrape.com/collections/linen" target="_blank" rel="noopener">Linen Custom Curtains</a></li>
-        <li><a href="https://luxdrape.com/collections/velvet" target="_blank" rel="noopener">Velvet Custom Curtains</a></li>
+        <li><a href="https://worldhomeexpo.com/" target="_blank" rel="noopener">Custom Curtains — WorldHomeExpo</a></li>
+        <li><a href="https://worldhomeexpo.com/collections/linen" target="_blank" rel="noopener">Linen Custom Curtains</a></li>
+        <li><a href="https://worldhomeexpo.com/collections/velvet" target="_blank" rel="noopener">Velvet Custom Curtains</a></li>
       </ul>
     </section>
   </main>
 
   <footer>
-    © <span id="y"></span> LuxDrape • Free curtain tools with backlinks to
-    <a href="https://luxdrape.com/" target="_blank" rel="noopener">Custom Curtains</a>.
+    © <span id="y"></span> WorldHomeExpo • Free curtain tools with backlinks to
+    <a href="https://worldhomeexpo.com/" target="_blank" rel="noopener">Custom Curtains</a>.
   </footer>
 
   <script>
+    function round(n, d){ const p = Math.pow(10, d); return Math.round((n + Number.EPSILON) * p) / p; }
     document.getElementById('y').textContent = new Date().getFullYear();
 
     function calculate(){
@@ -108,29 +112,38 @@
       const drop = parseFloat(document.getElementById('drop').value);
       const fullness = parseFloat(document.getElementById('fullness').value);
       const fabricWidth = parseFloat(document.getElementById('fabricWidth').value);
-      const top = parseFloat(document.getElementById('topAllowance').value)||0;
-      const bottom = parseFloat(document.getElementById('bottomAllowance').value)||0;
-      const repeat = parseFloat(document.getElementById('patternRepeat').value)||0;
+      const top = parseFloat(document.getElementById('topAllowance').value) || 0;
+      const bottom = parseFloat(document.getElementById('bottomAllowance').value) || 0;
+      const repeat = parseFloat(document.getElementById('patternRepeat').value) || 0;
 
-      if(!width || !drop || !fullness || !fabricWidth){
-        document.getElementById('results').innerHTML = "<p>Please fill all required values.</p>";
+      const valid =
+        Number.isFinite(width) && width > 0 &&
+        Number.isFinite(drop) && drop > 0 &&
+        Number.isFinite(fullness) && fullness > 0 &&
+        Number.isFinite(fabricWidth) && fabricWidth > 0;
+
+      if(!valid){
+        document.getElementById('results').innerHTML = "<p>Please fill all required values with numbers greater than 0.</p>";
         return;
       }
 
-      const totalWidth = width * fullness;
-      const panels = Math.ceil(totalWidth / fabricWidth);
-      const dropWithAllowances = drop + top + bottom + repeat;
-      const fabricNeeded = panels * dropWithAllowances;
+      const totalWidth = width * fullness;                      // total finished width needed
+      const panels = Math.max(1, Math.ceil(totalWidth / fabricWidth)); // number of vertical drops/panels
+      const dropWithAllowances = drop + top + bottom + repeat;  // length per drop including allowances
+      const fabricNeededInches = panels * dropWithAllowances;   // total length in inches
+      const fabricNeededYards = fabricNeededInches / 36;        // convert inches to yards
 
       document.getElementById('results').innerHTML = `
-        <p><strong>Rod span:</strong> ${width} in</p>
-        <p><strong>Total fabric width needed:</strong> ${totalWidth.toFixed(1)} in</p>
-        <p><strong>Fabric width chosen:</strong> ${fabricWidth} in</p>
-        <p><strong>Panels required:</strong> ${panels}</p>
-        <p><strong>Drop including allowances:</strong> ${dropWithAllowances} in</p>
-        <p><strong>Total fabric yardage:</strong> ${(fabricNeeded/36).toFixed(1)} yd (${fabricNeeded.toFixed(1)} in)</p>
+        <p><strong>Rod span:</strong> ${round(width,1)} in</p>
+        <p><strong>Total finished width needed:</strong> ${round(totalWidth,1)} in</p>
+        <p><strong>Fabric width selected:</strong> ${fabricWidth} in</p>
+        <p><strong>Panels (vertical drops) required:</strong> ${panels}</p>
+        <p><strong>Drop including allowances:</strong> ${round(dropWithAllowances,1)} in</p>
+        <p><strong>Total fabric yardage:</strong> ${round(fabricNeededYards,1)} yd (${round(fabricNeededInches,1)} in)</p>
       `;
     }
+
+    document.getElementById('calcBtn').addEventListener('click', calculate);
   </script>
 </body>
 </html>
